@@ -1,0 +1,46 @@
+@(title: String,menu:String, scripts: Html = Html(""))(content: Html)
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>@title</title>
+
+            <!-- Bootstrap core CSS -->
+        <link href="@routes.Assets.at("stylesheets/bootstrap.min.css")" rel="stylesheet">
+
+            <!-- Custom styles for this template -->
+        <link href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet">
+    </head>
+
+    <body>
+        @layout.header()
+
+        <div class="container-fluid">
+            <div class="row">
+                @layout.sidebar()
+
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                        <h1 class="h2">@menu</h1>
+                    </div>
+                    @content
+                </main>
+            </div>
+        </div>
+
+            <!-- Bootstrap core JavaScript
+    ================================================== -->
+            <!-- Placed at the end of the document so the pages load faster -->
+        <script src="@routes.Assets.at("javascripts/jquery-3.4.1.min.js")" ></script>
+        <script src="@routes.Assets.at("javascripts/popper.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
+        <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+        <script>
+                feather.replace()
+        </script>
+    </body>
+</html>
