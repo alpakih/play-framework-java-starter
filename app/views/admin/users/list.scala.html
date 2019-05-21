@@ -1,0 +1,47 @@
+@layout.main("List Users", "List Users", scripts) {
+    <i data-feather="delete"></i>
+    <table id="user" >
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    </table>
+
+    @views.html.helper.modal_delete
+}
+@scripts = {
+    <script type="text/javascript">
+            $(document).ready(function () {
+                var tableUser= $('#user').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": "@controllers.admin.routes.UserController.listUser()"
+                });
+                $('#submit-delete').on('click', function () {
+                    var id = $("#user_id").val();
+                    $.ajax({
+                        url: "/admin/users/" + id + "/delete",
+                        type: 'DELETE',
+                        beforeSend: function () {
+                            $('#modal-delete').modal('hide');
+                        },
+                        success: function (resp) {
+                            alert(resp);
+                            tableUser.ajax.reload();
+                        },
+                        complete: function (xhr) {
+                        }
+                    });
+                });
+            });
+            function deleteDataUser(id) {
+                $('#modal-delete').modal('show');
+                $("#user_id").val(id);
+            }
+
+    </script>
+    };
