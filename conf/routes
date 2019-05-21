@@ -5,7 +5,11 @@
 # An example controller showing a sample home page
 GET           /                              @controllers.HomeController.index
 GET           /admin/users                   @controllers.admin.UserController.index
+GET           /admin/users/add               @controllers.admin.UserController.add
 GET           /admin/users/list              @controllers.admin.UserController.listUser
+POST          /admin/users/store             @controllers.admin.UserController.store
 DELETE        /admin/users/:id/delete        @controllers.admin.UserController.delete(id:Long)
+GET           /admin/users/:id/edit          @controllers.admin.UserController.edit(id:Long)
+POST          /admin/users/update            @controllers.admin.UserController.update
 # Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                  controllers.Assets.at(path="/public", file)
+GET           /assets/*file                  @controllers.Assets.at(path="/public", file)

@@ -28,6 +28,9 @@ public class User extends Model {
     @Column(name = "password")
     public String password;
 
+    @Transient
+    public String confirmPassword;
+
     @Constraints.MinLength(value = 11, message = "Minimum value 11")
     @Constraints.MaxLength(value = 12, message = "Maximum value 12")
     @Column(name = "phone_number", nullable = false, length = 45)

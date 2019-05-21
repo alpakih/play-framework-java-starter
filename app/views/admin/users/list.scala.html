@@ -1,22 +1,44 @@
 @layout.main("List Users", "List Users", scripts) {
-    <i data-feather="delete"></i>
-    <table id="user" >
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-    </table>
-
-    @views.html.helper.modal_delete
+    <div id="messages-div">
+        @if(flash.containsKey("success")) {
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                @flash.get("success")
+            </div>
+        }
+        @if(flash.containsKey("error")) {
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                @flash.get("error")
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-md-12" style=" margin-bottom: 30px;">
+            <a class="btn btn-info btn-sm pull-right" href="@controllers.admin.routes.UserController.add()">
+                <i class="fa fa-plus"></i> Tambah
+            </a>
+        </div>
+    </div>
+    <div class="box-body data-tables table-responsive table-invest">
+        <table id="user" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    @views.html.helper.modal_delete()
 }
 @scripts = {
     <script type="text/javascript">
             $(document).ready(function () {
-                var tableUser= $('#user').DataTable({
+                var tableUser = $('#user').DataTable({
                     "processing": true,
                     "serverSide": true,
                     "ajax": "@controllers.admin.routes.UserController.listUser()"
@@ -38,10 +60,11 @@
                     });
                 });
             });
+
             function deleteDataUser(id) {
                 $('#modal-delete').modal('show');
                 $("#user_id").val(id);
             }
 
     </script>
-    };
+};
