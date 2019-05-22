@@ -10,7 +10,8 @@ libraryDependencies ++= Seq(
   javaWs,
   evolutions,
   "org.postgresql" % "postgresql" % "42.2.5",
-  "org.mindrot" % "jbcrypt" % "0.3m"
+  "org.mindrot" % "jbcrypt" % "0.3m",
+  "commons-io" % "commons-io" % "2.6"
 
 )
 resolvers ++= Seq(

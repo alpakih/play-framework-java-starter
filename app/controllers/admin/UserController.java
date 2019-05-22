@@ -5,65 +5,100 @@ import com.avaje.ebean.PagedList;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import constan.DatatablesConstant;
+import helper.Util;
 import models.User;
 import org.mindrot.jbcrypt.BCrypt;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 
+import java.io.IOException;
 import java.util.Map;
 
+/**
+ * User Controller
+ * index,add,store,edit,update and delete method
+ */
 public class UserController extends Controller {
 
+    /**
+     * Method index
+     *
+     * @return view
+     */
     public Result index() {
         return ok(views.html.admin.users.list.render());
     }
 
+    /**
+     * Method Add
+     *
+     * @return view form
+     */
     public Result add() {
         Form<User> data = Form.form(User.class);
         return ok(views.html.admin.users.form.render("User", "Add", routes.UserController.store(), data));
     }
 
+    /**
+     * Method Edit
+     *
+     * @parameters  id
+     * @return view form
+     */
+
     public Result edit(Long id) {
         User user = User.find.byId(id);
-        Form<User> userForm = null;
+        Form<User> userForm;
         if (user != null) {
             userForm = Form.form(User.class).fill(user);
         } else {
+            flash("error", "failed to edit data");
             return redirect(routes.UserController.index());
 
         }
         return ok(views.html.admin.users.form.render("User", "Edit", routes.UserController.update(), userForm));
     }
 
+    /**
+     * Mehthod for update data
+     *
+     * @return result
+     */
     public Result update() {
 
         try {
             Ebean.beginTransaction();
+            //Binding data from form / view
             Form<User> form = Form.form(User.class).bindFromRequest();
-            if (form.hasErrors()) {
-                flash("error", "User " + form.get().name + " failed created");
+            //Binding data as multipartFormData to get file
+            Http.MultipartFormData multipartFormData = request().body().asMultipartFormData();
+            Http.MultipartFormData.FilePart userImage = multipartFormData.getFile("image");
 
+            //Validation
+            if (form.hasErrors()) {
+                flash("error", "User " + form.get().name + " failed update");
+            } else if (!form.get().password.equals(form.get().confirmPassword)) {
+                flash("error", "Wrong confirm password");
+                return redirect(routes.UserController.index());
             } else {
                 User formData = form.get();
                 if (formData != null) {
-                    formData.name = form.get().name;
-                    formData.email = form.get().email;
-                    formData.password = BCrypt.hashpw(form.get().password, BCrypt.gensalt());
-                    formData.phoneNumber = form.get().phoneNumber;
-
+                    saveToUserTable(formData, userImage);
                     formData.update();
                     Ebean.commitTransaction();
 
                     flash("success", "User "
-                            + form.get().name + " success created");
+                            + form.get().name + " success updated");
                 } else {
                     flash("error", "Error!");
                 }
             }
         } catch (Exception e) {
+            flash("error", e.getMessage());
             Ebean.rollbackTransaction();
         } finally {
             Ebean.endTransaction();
@@ -71,23 +106,30 @@ public class UserController extends Controller {
         return redirect(routes.UserController.index());
     }
 
+    /**
+     * Method store for save data
+     *
+     * @return result
+     */
     public Result store() {
         try {
             Ebean.beginTransaction();
+            //Binding data from form / view
             Form<User> userForm = Form.form(User.class).bindFromRequest();
+            //Binding data as multipartFormData to get file
+            Http.MultipartFormData multipartFormData = request().body().asMultipartFormData();
+            Http.MultipartFormData.FilePart userImage = multipartFormData.getFile("image");
+            //Validation
             if (userForm.hasErrors()) {
                 flash("error", "User " + userForm.get().name + " failed created");
             } else if (!userForm.get().password.equals(userForm.get().confirmPassword)) {
                 flash("error", "Wrong confirm password");
+                return redirect(routes.UserController.index());
             }
-            User user = new User();
-            user.name = userForm.get().name;
-            user.email = userForm.get().email;
-            user.password = BCrypt.hashpw(userForm.get().password, BCrypt.gensalt());
-            user.phoneNumber = userForm.get().phoneNumber;
-
+            //Save to table
+            User user = userForm.get();
+            saveToUserTable(user, userImage);
             user.save();
-
             Ebean.commitTransaction();
             flash("success", "User " + userForm.get().name + " has been created");
         } catch (Exception e) {
@@ -99,6 +141,11 @@ public class UserController extends Controller {
         return redirect(routes.UserController.index());
     }
 
+    /**
+     * Mehode listUser for list datatables
+     *
+     * @return json
+     */
     public Result listUser() {
 
         try {
@@ -110,25 +157,22 @@ public class UserController extends Controller {
 
             int page = Integer.valueOf(parameters.get(DatatablesConstant.DATATABLE_PARAM_DISPLAY_START)[0]) / pageSize;
 
-
             String sortBy = "id";
             String order = parameters.get(DatatablesConstant.DATATABLE_PARAM_SORTING_ORDER)[0];
 
             Integer sortingColumnId = Integer.valueOf(parameters.get(DatatablesConstant.DATATABLE_PARAM_SORTING_COLUMN)[0]);
 
-
             switch (sortingColumnId) {
 
-                case 1:
+                case 2:
                     sortBy = "name";
                     break;
-                case 2:
+                case 3:
                     sortBy = "email";
                     break;
-                case 3:
+                case 4:
                     sortBy = "phoneNumber";
                     break;
-
             }
 
             PagedList<User> userPage = User.page(page, pageSize, sortBy, order, searchParam);
@@ -148,10 +192,11 @@ public class UserController extends Controller {
                 action += "&nbsp;<a href=\"javascript:deleteDataUser(" + c.id + ");\"><i class=\"fa fa-remove\"></i>Delete</a>&nbsp;";
 
                 row.put("0", num);
-                row.put("1", c.name);
-                row.put("2", c.email);
-                row.put("3", c.phoneNumber);
-                row.put("4", action);
+                row.put("1", "&nbsp;<img src=\"" + Util.BASE_IMAGE + "/avatars/" + c.image + "\" style=\"width:100px\">");
+                row.put("2", c.name);
+                row.put("3", c.email);
+                row.put("4", c.phoneNumber);
+                row.put("5", action);
                 an.add(row);
                 num++;
             }
@@ -164,6 +209,12 @@ public class UserController extends Controller {
         }
     }
 
+    /**
+     * Method delete for delete data
+     *
+     * @parameters id
+     * @return result
+     */
     public Result delete(Long id) {
         User user = User.find.byId(id);
         int status = 0;
@@ -174,5 +225,16 @@ public class UserController extends Controller {
         String message = status == 1 ? "User success deleted" : "User failed deleted";
 
         return ok(message);
+    }
+
+    private static void saveToUserTable(User user, Http.MultipartFormData.FilePart filePart) throws IOException {
+        User saveUser = new User();
+        saveUser.name = user.name;
+        saveUser.email = user.email;
+        saveUser.password = BCrypt.hashpw(user.password, BCrypt.gensalt());
+        saveUser.phoneNumber = user.phoneNumber;
+        if (filePart != null) {
+            saveUser.image = Util.saveImage(filePart);
+        }
     }
 }
