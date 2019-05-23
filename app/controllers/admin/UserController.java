@@ -87,7 +87,9 @@ public class UserController extends Controller {
             } else {
                 User formData = form.get();
                 if (formData != null) {
-                    saveToUserTable(formData, userImage);
+                    if (userImage!=null){
+                        formData.image=Util.saveImage(userImage);
+                    }
                     formData.update();
                     Ebean.commitTransaction();
 
@@ -128,7 +130,9 @@ public class UserController extends Controller {
             }
             //Save to table
             User user = userForm.get();
-            saveToUserTable(user, userImage);
+            if (userImage!=null){
+                user.image=Util.saveImage(userImage);
+            }
             user.save();
             Ebean.commitTransaction();
             flash("success", "User " + userForm.get().name + " has been created");
@@ -225,16 +229,5 @@ public class UserController extends Controller {
         String message = status == 1 ? "User success deleted" : "User failed deleted";
 
         return ok(message);
-    }
-
-    private static void saveToUserTable(User user, Http.MultipartFormData.FilePart filePart) throws IOException {
-        User saveUser = new User();
-        saveUser.name = user.name;
-        saveUser.email = user.email;
-        saveUser.password = BCrypt.hashpw(user.password, BCrypt.gensalt());
-        saveUser.phoneNumber = user.phoneNumber;
-        if (filePart != null) {
-            saveUser.image = Util.saveImage(filePart);
-        }
     }
 }
