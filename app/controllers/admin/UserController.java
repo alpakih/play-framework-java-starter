@@ -15,7 +15,6 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -87,6 +86,7 @@ public class UserController extends Controller {
             } else {
                 User formData = form.get();
                 if (formData != null) {
+                    formData.password = BCrypt.hashpw(form.get().password,BCrypt.gensalt());
                     if (userImage!=null){
                         formData.image=Util.saveImage(userImage);
                     }
@@ -130,6 +130,7 @@ public class UserController extends Controller {
             }
             //Save to table
             User user = userForm.get();
+            user.password = BCrypt.hashpw(userForm.get().password,BCrypt.gensalt());
             if (userImage!=null){
                 user.image=Util.saveImage(userImage);
             }
