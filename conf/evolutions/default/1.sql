@@ -1,5 +1,3 @@
-# --- Created by Ebean DDL
-# To stop Ebean DDL generation, remove this comment and start using Evolutions
 
 # --- !Ups
 
@@ -16,6 +14,7 @@ create table users (
   constraint pk_users primary key (id))
 ;
 
+
 create sequence user_seq;
 
 
@@ -25,5 +24,4 @@ create sequence user_seq;
 
 drop table if exists users cascade;
 
-drop sequence if exists user_seq;
 
