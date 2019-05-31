@@ -1,4 +1,4 @@
-@layout.main("List Users", "List Users", scripts) {
+@layout.main("List Product", "List Product", scripts) {
     <div id="messages-div">
         @if(flash.containsKey("success")) {
             <div class="alert alert-success">
@@ -15,13 +15,13 @@
     </div>
     <div class="row">
         <div class="col-md-12" style=" margin-bottom: 30px;">
-            <a class="btn btn-info btn-sm pull-right" href="#">
+            <a class="btn btn-info btn-sm pull-right" href="@controllers.admin.routes.ProductController.add()">
                 <i class="fa fa-plus"></i> Tambah
             </a>
         </div>
     </div>
     <div class="box-body data-tables table-responsive table-invest">
-        <table id="user" class="table table-hover">
+        <table id="product" class="table table-hover">
             <thead>
                 <tr>
                     <th>No</th>
@@ -39,10 +39,10 @@
 @scripts = {
     <script type="text/javascript">
             $(document).ready(function () {
-                var tableUser = $('#user').DataTable({
+                var tableProduct = $('#product').DataTable({
                     "processing": true,
                     "serverSide": true,
-                    "ajax": "@controllers.admin.routes.UserController.listUser()"
+                    "ajax": "@controllers.admin.routes.ProductController.listProduct()"
                 });
                 $('#submit-delete').on('click', function () {
                     var id = $("#user_id").val();
@@ -54,7 +54,7 @@
                         },
                         success: function (resp) {
                             alert(resp);
-                            tableUser.ajax.reload();
+                            tableProduct.ajax.reload();
                         },
                         complete: function (xhr) {
                         }

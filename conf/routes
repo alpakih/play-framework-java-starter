@@ -15,6 +15,9 @@ GET           /admin/users/:id/edit          @controllers.admin.UserController.e
 POST          /admin/users/update            @controllers.admin.UserController.update
 #PRODUCT
 GET           /admin/product                 @controllers.admin.ProductController.index
+GET           /admin/product/list              @controllers.admin.ProductController.listProduct
+GET           /admin/product/add               @controllers.admin.ProductController.add
+POST          /admin/product/store             @controllers.admin.ProductController.store
 
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                  @controllers.Assets.at(path="/public", file)

@@ -29,6 +29,7 @@ public class UserController extends Controller {
      * @return view
      */
     public Result index() {
+
         return ok(views.html.admin.users.list.render());
     }
 

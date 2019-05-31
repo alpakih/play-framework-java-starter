@@ -1,0 +1,79 @@
+@(title: String, action: String, url: play.api.mvc.Call, form: Form[Product])
+@layout.main(action + " Product", action + " Product", scripts) {
+    <div class="panel-body">
+        <form action="@url" method="POST" class="form-horizontal" id="form-product" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <input type="hidden" id="id" name="@form("id").name()" value="@form("id").value()">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2" for="name">Nama Produk</label>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control" name="name" id="name" value="@form("name").value()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2" for="price">Price</label>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control" name="price" id="price" value="@form("price").value()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2" for="description">Description</label>
+                <div class="col-lg-4">
+                    <input type="textarea" class="form-control" name="description" id="description" value="@form("description").value()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2">Image</label>
+                <div class="col-lg-4">
+                    <input type="file" class="form-control" name="image" id="image" accept=".png, .jpg, .jpeg" value="C:/Users/Ahmad Alpakih/Downloads/Image/13.jpg">
+                    <img style="display: none;
+                        width: 200px;
+                        height: 200px;" id="preview"
+                    src="@routes.Assets.at("images/upload/avatars/" + form("image").value())" alt="preview_image" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-4">
+                    <a href="@controllers.admin.routes.ProductController.index()" class="btn btn-warning" id="btn-back">
+                        Kembali
+                    </a>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+}
+@scripts = {
+    <script>
+            if ($("#id").val() !== "") {
+                $("#preview").css('display', 'block');
+                readURL($("#image"));
+            }
+
+            function readURL(input) {
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#preview').attr('src', e.target.result);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#image").change(function () {
+                $("#preview").css('display', 'block');
+                readURL(this);
+            });
+    </script>
+
+}
