@@ -45,7 +45,7 @@
                     "ajax": "@controllers.admin.routes.UserController.listUser()"
                 });
                 $('#submit-delete').on('click', function () {
-                    var id = $("#user_id").val();
+                    var id = $("#id").val();
                     $.ajax({
                         url: "/admin/users/" + id + "/delete",
                         type: 'DELETE',
@@ -64,7 +64,7 @@
 
             function deleteDataUser(id) {
                 $('#modal-delete').modal('show');
-                $("#user_id").val(id);
+                $("#id").val(id);
             }
 
     </script>
