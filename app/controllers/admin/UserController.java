@@ -89,7 +89,7 @@ public class UserController extends Controller {
                 if (formData != null) {
                     formData.password = BCrypt.hashpw(form.get().password,BCrypt.gensalt());
                     if (userImage!=null){
-                        formData.image=Util.saveImage(userImage);
+                        formData.image=Util.saveImage(userImage,"avatars");
                     }
                     formData.update();
                     Ebean.commitTransaction();
@@ -133,7 +133,7 @@ public class UserController extends Controller {
             User user = userForm.get();
             user.password = BCrypt.hashpw(userForm.get().password,BCrypt.gensalt());
             if (userImage!=null){
-                user.image=Util.saveImage(userImage);
+                user.image=Util.saveImage(userImage,"avatars");
             }
             user.save();
             Ebean.commitTransaction();

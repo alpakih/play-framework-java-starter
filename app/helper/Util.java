@@ -12,7 +12,7 @@ import java.io.IOException;
 public class Util {
     public static final String BASE_IMAGE = Play.application().configuration().getString("application.base.image");
 
-    public static String saveImage( Http.MultipartFormData.FilePart filePart)
+    public static String saveImage(Http.MultipartFormData.FilePart filePart, String type)
             throws IOException {
 
         String fileName = null;
@@ -21,14 +21,14 @@ public class Util {
             fileName = filePart.getFilename();
             File file = filePart.getFile();
             generateImageId = RandomStringUtils.random(10, false, true);
-            FileUtils.moveFile(file, getFileUser(fileName, generateImageId));
+            FileUtils.moveFile(file, getFileUser(fileName, generateImageId, type));
 
         }
         return generateImageId + "." + FilenameUtils.getExtension(fileName);
     }
 
-    private static File getFileUser(String fileName, String id) {
-        return new File("public/images/upload/avatars",
+    private static File getFileUser(String fileName, String id, String type) {
+        return new File("public/images/upload/" + type,
                 id + "." + FilenameUtils.getExtension(fileName));
     }
 }

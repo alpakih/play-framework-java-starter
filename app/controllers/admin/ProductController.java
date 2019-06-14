@@ -8,7 +8,6 @@ import constan.DatatablesConstant;
 import helper.Util;
 import models.Product;
 import models.User;
-import org.mindrot.jbcrypt.BCrypt;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -74,7 +73,7 @@ public class ProductController extends Controller {
                 action += "&nbsp;<a href=\"javascript:deleteDataUser(" + c.id + ");\"><i class=\"fa fa-remove\"></i>Delete</a>&nbsp;";
 
                 row.put("0", num);
-                row.put("1", "&nbsp;<img src=\"" + Util.BASE_IMAGE + "/product/" + c.photo + "\" style=\"width:100px\">");
+                row.put("1", "&nbsp;<img src=\"" + Util.BASE_IMAGE + "/products/" + c.photo + "\" style=\"width:100px\">");
                 row.put("2", c.name);
                 row.put("3", c.price);
                 row.put("4", c.description);
@@ -106,7 +105,7 @@ public class ProductController extends Controller {
             //Save to table
             Product product = productForm.get();
             if (productImage!=null){
-                product.photo=Util.saveImage(productImage);
+                product.photo=Util.saveImage(productImage,"products");
             }
             product.save();
             Ebean.commitTransaction();
