@@ -35,7 +35,7 @@ create table users (
 
 create sequence category_seq;
 
-create sequence product_seq;
+create sequence name_category_seq;
 
 create sequence user_seq;
 
@@ -52,7 +52,7 @@ drop table if exists users cascade;
 
 drop sequence if exists category_seq;
 
-drop sequence if exists product_seq;
+drop sequence if exists name_category_seq;
 
 drop sequence if exists user_seq;
 

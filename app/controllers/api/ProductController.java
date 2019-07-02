@@ -7,7 +7,6 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import java.util.Currency;
 import java.util.List;
 
 public class ProductController extends Controller {
@@ -61,6 +60,7 @@ public class ProductController extends Controller {
             product.name=node.get("name").asText();
             product.price=node.get("price").asDouble();
             product.description=node.get("description").asText();
+            product.save();
 
             return ok(Json.toJson(product));
         }catch (Exception e){

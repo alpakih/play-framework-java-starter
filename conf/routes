@@ -33,7 +33,17 @@ POST          /admin/category/update            @controllers.admin.CategoryContr
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                  @controllers.Assets.at(path="/public", file)
 
+GET           /api/user                        @controllers.api.UserController.getListUser()
+POST          /api/user/create                 @controllers.api.UserController.createUser()
+GET           /api/user/delete/:id             @controllers.api.UserController.deleteUser(id:Long)
+POST          /api/user/update/:id             @controllers.api.UserController.updateUser(id:Long)
+
 GET           /api/product                        @controllers.api.ProductController.getProductList()
 GET           /api/product/delete/:id             @controllers.api.ProductController.deleteProduct(id:Long)
-POST           /api/product/update/:id            @controllers.api.ProductController.updateProduct(id:Long)
-POST           /api/product/create                @controllers.api.ProductController.createProduct()
+POST          /api/product/update/:id             @controllers.api.ProductController.updateProduct(id:Long)
+POST          /api/product/create                 @controllers.api.ProductController.createProduct()
+
+GET           /api/category                        @controllers.api.CategoryController.getCategoryList()
+POST          /api/category/create                 @controllers.api.CategoryController.createCategory()
+GET           /api/category/delete/:id             @controllers.api.CategoryController.deleteCategory(id:Long)
+POST          /api/category/update/:id             @controllers.api.CategoryController.updateCategory(id:Long)

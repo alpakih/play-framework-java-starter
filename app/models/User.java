@@ -17,9 +17,10 @@ public class User extends Model {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "name_user_seq")
     public Long id;
 
-    @Constraints.Pattern(value = "^[a-zA-Z \\\\._\\\\-]+$", message = "name hanya diperbolehkan abjad")
-    @Constraints.MinLength(value = 2, message = "Minimum value 2")
-    @Constraints.MaxLength(value = 45, message = "Maximum value 50")
+//    @Constraints.Pattern(value = "^[a-zA-Z \\\\._\\\\-]+$", message = "name hanya diperbolehkan abjad")
+//    @Constraints.MinLength(value = 2, message = "Minimum value 2")
+//    @Constraints.MaxLength(value = 45, message = "Maximum value 50")
+    @Column(name = "name")
     public String name;
 
     @Column(name = "email", unique = true)

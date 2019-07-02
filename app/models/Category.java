@@ -2,12 +2,8 @@ package models;
 
 import com.avaje.ebean.Model;
 import com.avaje.ebean.PagedList;
-import play.data.validation.Constraints.Max;
-import play.data.validation.Constraints.Min;
-import play.data.validation.Constraints.Pattern;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "category")

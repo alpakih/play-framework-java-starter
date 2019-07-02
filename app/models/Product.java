@@ -4,15 +4,17 @@ import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
 import com.avaje.ebean.PagedList;
 
+//import javax.persistence.*;
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "product")
 public class Product extends Model {
+
     @Id
     @SequenceGenerator(name = "name_product_seq", sequenceName = "product_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "name_product_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "name_category_seq")
     public Long id;
 
     @Column(name = "image", columnDefinition = "TEXT")
