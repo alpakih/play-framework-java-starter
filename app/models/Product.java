@@ -37,6 +37,7 @@ public class Product extends Model {
 
     public static Finder<Long, Product> find = new Finder<>(Long.class, Product.class);
 
+
     public static PagedList<Product> page(int page, int pageSize, String sortBy, String order, String filter) {
         return
                 find.where()

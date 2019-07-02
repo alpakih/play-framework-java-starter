@@ -14,10 +14,26 @@ DELETE        /admin/users/:id/delete        @controllers.admin.UserController.d
 GET           /admin/users/:id/edit          @controllers.admin.UserController.edit(id:Long)
 POST          /admin/users/update            @controllers.admin.UserController.update
 #PRODUCT
-GET           /admin/product                 @controllers.admin.ProductController.index
+GET           /admin/product                   @controllers.admin.ProductController.index
 GET           /admin/product/list              @controllers.admin.ProductController.listProduct
 GET           /admin/product/add               @controllers.admin.ProductController.add
 POST          /admin/product/store             @controllers.admin.ProductController.store
+DELETE        /admin/product/:id/delete        @controllers.admin.ProductController.delete(id:Long)
+GET           /admin/product/:id/edit          @controllers.admin.ProductController.edit(id:Long)
+POST          /admin/product/update            @controllers.admin.ProductController.update
+#CATAGORY
+GET           /admin/category                   @controllers.admin.CategoryController.index
+GET           /admin/category/list              @controllers.admin.CategoryController.listCategoryProduct
+GET           /admin/category/add               @controllers.admin.CategoryController.add
+POST          /admin/category/store             @controllers.admin.CategoryController.store
+DELETE        /admin/category/:id/delete        @controllers.admin.CategoryController.delete(id:Long)
+GET           /admin/category/:id/edit          @controllers.admin.CategoryController.edit(id:Long)
+POST          /admin/category/update            @controllers.admin.CategoryController.update
 
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                  @controllers.Assets.at(path="/public", file)
+
+GET           /api/product                        @controllers.api.ProductController.getProductList()
+GET           /api/product/delete/:id             @controllers.api.ProductController.deleteProduct(id:Long)
+POST           /api/product/update/:id            @controllers.api.ProductController.updateProduct(id:Long)
+POST           /api/product/create                @controllers.api.ProductController.createProduct()

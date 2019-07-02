@@ -1,4 +1,4 @@
-@layout.main("List Product", "List Product", scripts) {
+@layout.main("List Catagory", "List Catagory", scripts) {
     <div id="messages-div">
         @if(flash.containsKey("success")) {
             <div class="alert alert-success">
@@ -15,21 +15,18 @@
     </div>
     <div class="row">
         <div class="col-md-12" style=" margin-bottom: 30px;">
-            <a class="btn btn-info btn-sm pull-right" href="@controllers.admin.routes.ProductController.add()">
+            <a class="btn btn-info btn-sm pull-right" href="@controllers.admin.routes.CategoryController.add()">
                 <i class="fa fa-plus"></i> Tambah
             </a>
         </div>
     </div>
     <div class="box-body data-tables table-responsive table-invest">
-        <table id="product" class="table table-hover">
+        <table id="category" class="table table-hover">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Photo</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Description</th>
-                    <th>Actions</th>
+                    <th>Nama Category</th>
+                    <th>Action</th>
                 </tr>
             </thead>
         </table>
@@ -39,22 +36,22 @@
 @scripts = {
     <script type="text/javascript">
             $(document).ready(function () {
-                var tableProduct = $('#product').DataTable({
+                var tableCategory = $('#category').DataTable({
                     "processing": true,
                     "serverSide": true,
-                    "ajax": "@controllers.admin.routes.ProductController.listProduct()"
+                    "ajax": "@controllers.admin.routes.CategoryController.listCategoryProduct()"
                 });
                 $('#submit-delete').on('click', function () {
                     var id = $("#id").val();
                     $.ajax({
-                        url: "/admin/product/" + id + "/delete",
+                        url: "/admin/category/" + id + "/delete",
                         type: 'DELETE',
                         beforeSend: function () {
                             $('#modal-delete').modal('hide');
                         },
                         success: function (resp) {
                             alert(resp);
-                            tableProduct.ajax.reload();
+                            tableCategory.ajax.reload();
                         },
                         complete: function (xhr) {
                         }
@@ -62,10 +59,10 @@
                 });
             });
 
-            function deleteDataProduct(id) {
+            function deleteDataCategory(id) {
                 $('#modal-delete').modal('show');
                 $("#id").val(id);
             }
 
     </script>
-};
+}

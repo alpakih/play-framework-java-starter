@@ -1,0 +1,56 @@
+@(title: String, action: String, url: play.api.mvc.Call, form: Form[Category])
+@layout.main(action + " Catagory", action + " Catagory", scripts ){
+    <div class="panel-body">
+        <form action="@url" method="post" class="form-horizontal" id="form-catagory" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="hidden" name="@form("id").name()" id="id" value="@form("id").value()">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2" for="name">Nama Catagory</label>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control" name="name" id="name" value="@form("name").value()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-4">
+                    <a href="@controllers.admin.routes.CategoryController.index()" class="btn btn-warning" id="btn-back">
+                        Kembali
+                    </a>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+
+        </form>
+
+
+    </div>
+}
+
+@scripts = {
+    <script>
+            if ($("#id").val() !== "") {
+                $("#preview").css('display', 'block');
+                readURL($("#image"));
+            }
+
+            function readURL(input) {
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#preview').attr('src', e.target.result);
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#image").change(function () {
+                $("#preview").css('display', 'block');
+                readURL(this);
+            });
+    </script>
+}
