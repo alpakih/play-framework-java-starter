@@ -62,6 +62,7 @@ public class ProductController extends Controller {
             product.price=node.get("price").asDouble();
             product.description=node.get("description").asText();
 
+            product.save();
             return ok(Json.toJson(product));
         }catch (Exception e){
             return badRequest();
