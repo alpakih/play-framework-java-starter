@@ -64,12 +64,13 @@ public class ProductController extends Controller {
         }
     }
 
-    public Result deleteProduct(Long id){
+
+    public Result deleteProduct(Long id) {
         Product product = Product.find.byId(id);
         try {
-            if(product !=null){
+            if (product != null) {
                 product.delete();
-            }else{
+            } else {
                 return ok("data not found");
             }
             return ok(Json.toJson(product));
@@ -77,6 +78,7 @@ public class ProductController extends Controller {
             return badRequest("delete failed");
         }
     }
+
 
     public Result getProductById(Long id) {
         Product product = Product.find.byId(id);
