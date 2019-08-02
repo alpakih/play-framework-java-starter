@@ -25,23 +25,15 @@ public class UserController extends Controller {
 
             user.name = node.get("name").asText();
             user.email = node.get("email").asText();
+            user.password = node.get("password").asText();
+            user.phoneNumber = node.get("phoneNumber").asText();
 
             user.save();
 
             return ok(Json.toJson(user));
         }catch (Exception e){
-            return badRequest();
+            return badRequest("create failed");
         }
-    }
-
-    public Result deleteUser(Long id){
-        User user = User.find.byId(id);
-        if(user!=null){
-            user.delete();
-        }else {
-            return ok("User tidak ditemukan");
-        }
-        return ok(Json.toJson(user));
     }
 
     public Result updateUser(Long id){
@@ -51,14 +43,35 @@ public class UserController extends Controller {
             JsonNode json = request().body().asJson();
             JsonNode node = mapper.readValue(json.toString(), JsonNode.class);
 
-            user.name = node.get("name").asText();
-            user.email = node.get("email").asText();
+            if (user==null){
+                return notFound("data not found");
+            }else {
+                user.name = node.get("name").asText();
+                user.email = node.get("email").asText();
+                user.password = node.get("password").asText();
+                user.phoneNumber = node.get("phoneNumber").asText();
 
-            user.update();
+                user.update();
 
-            return ok(Json.toJson(user));
+                return ok(Json.toJson(user));
+            }
         }catch (Exception e){
-            return badRequest();
+            return badRequest("update failed");
         }
     }
+
+    public Result deleteUser(Long id){
+        User user = User.find.byId(id);
+        try{
+            if(user!=null){
+                user.delete();
+            }else {
+                return ok("data not found");
+            }
+            return ok(Json.toJson(user));
+        }catch (Exception e){
+            return badRequest("delete failed");
+        }
+    }
+
 }

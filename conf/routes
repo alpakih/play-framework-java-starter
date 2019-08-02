@@ -4,46 +4,86 @@
 
 # An example controller showing a sample home page
 #HOME
-GET           /                              @controllers.HomeController.index
+GET           /                                    @controllers.HomeController.index
+GET           /login                               @controllers.LoginController.login()
+POST          /login/submit                        @controllers.LoginController.submit()
+GET           /logout                              @controllers.LoginController.logout()
 #USER
-GET           /admin/users                   @controllers.admin.UserController.index
-GET           /admin/users/add               @controllers.admin.UserController.add
-GET           /admin/users/list              @controllers.admin.UserController.listUser
-POST          /admin/users/store             @controllers.admin.UserController.store
-DELETE        /admin/users/:id/delete        @controllers.admin.UserController.delete(id:Long)
-GET           /admin/users/:id/edit          @controllers.admin.UserController.edit(id:Long)
-POST          /admin/users/update            @controllers.admin.UserController.update
+GET           /admin/users                         @controllers.admin.UserController.index
+GET           /admin/users/add                     @controllers.admin.UserController.add
+GET           /admin/users/list                    @controllers.admin.UserController.listUser
+POST          /admin/users/store                   @controllers.admin.UserController.store
+DELETE        /admin/users/:id/delete              @controllers.admin.UserController.delete(id:Long)
+GET           /admin/users/:id/edit                @controllers.admin.UserController.edit(id:Long)
+POST          /admin/users/update                  @controllers.admin.UserController.update
 #PRODUCT
-GET           /admin/product                   @controllers.admin.ProductController.index
-GET           /admin/product/list              @controllers.admin.ProductController.listProduct
-GET           /admin/product/add               @controllers.admin.ProductController.add
-POST          /admin/product/store             @controllers.admin.ProductController.store
-DELETE        /admin/product/:id/delete        @controllers.admin.ProductController.delete(id:Long)
-GET           /admin/product/:id/edit          @controllers.admin.ProductController.edit(id:Long)
-POST          /admin/product/update            @controllers.admin.ProductController.update
+GET           /admin/product                       @controllers.admin.ProductController.index
+GET           /admin/product/list                  @controllers.admin.ProductController.listProduct
+GET           /admin/product/add                   @controllers.admin.ProductController.add
+POST          /admin/product/store                 @controllers.admin.ProductController.store
+DELETE        /admin/product/:id/delete            @controllers.admin.ProductController.delete(id:Long)
+GET           /admin/product/:id/edit              @controllers.admin.ProductController.edit(id:Long)
+POST          /admin/product/update                @controllers.admin.ProductController.update
 #CATAGORY
-GET           /admin/category                   @controllers.admin.CategoryController.index
-GET           /admin/category/list              @controllers.admin.CategoryController.listCategoryProduct
-GET           /admin/category/add               @controllers.admin.CategoryController.add
-POST          /admin/category/store             @controllers.admin.CategoryController.store
-DELETE        /admin/category/:id/delete        @controllers.admin.CategoryController.delete(id:Long)
-GET           /admin/category/:id/edit          @controllers.admin.CategoryController.edit(id:Long)
-POST          /admin/category/update            @controllers.admin.CategoryController.update
+GET           /admin/category                      @controllers.admin.CategoryController.index
+GET           /admin/category/list                 @controllers.admin.CategoryController.listCategoryProduct
+GET           /admin/category/add                  @controllers.admin.CategoryController.add
+POST          /admin/category/store                @controllers.admin.CategoryController.store
+DELETE        /admin/category/:id/delete           @controllers.admin.CategoryController.delete(id:Long)
+GET           /admin/category/:id/edit             @controllers.admin.CategoryController.edit(id:Long)
+POST          /admin/category/update               @controllers.admin.CategoryController.update
+#CUSTOMER
+GET           /admin/customer                      @controllers.admin.CustomerController.index
+GET           /admin/customer/list                 @controllers.admin.CustomerController.listCustomer
+GET           /admin/customer/add                  @controllers.admin.CustomerController.add
+POST          /admin/customer/store                @controllers.admin.CustomerController.store
+GET           /admin/customer/:id/edit             @controllers.admin.CustomerController.edit(id:Long)
+DELETE        /admin/customer/:id/delete           @controllers.admin.CustomerController.delete(id:Long)
+POST          /admin/customer/update               @controllers.admin.CustomerController.update
+#ORDER
+GET           /admin/order                         @controllers.admin.OrderController.index
+GET           /admin/order/add                     @controllers.admin.OrderController.add
+GET           /admin/order/list                    @controllers.admin.OrderController.listOrder
+POST          /admin/order/store                   @controllers.admin.OrderController.store
+DELETE        /admin/order/:id/delete              @controllers.admin.OrderController.delete(id:Long)
+GET           /admin/order/:id/edit                @controllers.admin.OrderController.edit(id:Long)
+POST          /admin/order/update                  @controllers.admin.OrderController.update
+GET           /admin/order/:id/show                @controllers.admin.OrderController.showDetail(id:Long)
 
-# Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                  @controllers.Assets.at(path="/public", file)
-
-GET           /api/user                        @controllers.api.UserController.getListUser()
-POST          /api/user/create                 @controllers.api.UserController.createUser()
-GET           /api/user/delete/:id             @controllers.api.UserController.deleteUser(id:Long)
-POST          /api/user/update/:id             @controllers.api.UserController.updateUser(id:Long)
-
-GET           /api/product                        @controllers.api.ProductController.getProductList()
-GET           /api/product/delete/:id             @controllers.api.ProductController.deleteProduct(id:Long)
-POST          /api/product/update/:id             @controllers.api.ProductController.updateProduct(id:Long)
-POST          /api/product/create                 @controllers.api.ProductController.createProduct()
-
+#API USER
+GET           /api/user                            @controllers.api.UserController.getListUser()
+POST          /api/user/create                     @controllers.api.UserController.createUser()
+DELETE        /api/user/delete/:id                 @controllers.api.UserController.deleteUser(id:Long)
+PUT           /api/user/update/:id                 @controllers.api.UserController.updateUser(id:Long)
+#API PRODUCT
+GET           /api/product                         @controllers.api.ProductController.getProductList()
+DELETE        /api/product/delete/:id              @controllers.api.ProductController.deleteProduct(id:Long)
+PUT           /api/product/update/:id              @controllers.api.ProductController.updateProduct(id:Long)
+POST          /api/product/create                  @controllers.api.ProductController.createProduct()
+POST          /api/product/get-product/:id         @controllers.api.ProductController.getProductById(id:Long)
+#API CATEGORY
 GET           /api/category                        @controllers.api.CategoryController.getCategoryList()
 POST          /api/category/create                 @controllers.api.CategoryController.createCategory()
-GET           /api/category/delete/:id             @controllers.api.CategoryController.deleteCategory(id:Long)
-POST          /api/category/update/:id             @controllers.api.CategoryController.updateCategory(id:Long)
+DELETE        /api/category/delete/:id             @controllers.api.CategoryController.deleteCategory(id:Long)
+PUT           /api/category/update/:id             @controllers.api.CategoryController.updateCategory(id:Long)
+#API CUSTOMER
+GET           /api/customer                        @controllers.api.CustomerController.getCustomerList()
+POST          /api/customer/create                 @controllers.api.CustomerController.createCustomer()
+DELETE        /api/customer/delete/:id             @controllers.api.CustomerController.deleteCustomer(id:Long)
+PUT           /api/customer/update/:id             @controllers.api.CustomerController.updateCustomer(id:Long)
+#API ORDER
+GET           /api/order                           @controllers.api.OrderController.getOrderAll()
+GET           /api/order/:id                       @controllers.api.OrderController.getOrderList(id:Long)
+POST          /api/order/create                    @controllers.api.OrderController.createOrder()
+DELETE        /api/order/delete/:id                @controllers.api.OrderController.deleteOrder(id:Long)
+PUT           /api/order/update/:id                @controllers.api.OrderController.updateOrder(id:Long)
+#API LOGIN
+POST         /api/login                            @controllers.api.LoginController.getLogin()
+#API UPLOAD IMAGE
+POST         /api/upload                           @controllers.api.UploadController.uploadImage()
+POST         /api/upload2                          @controllers.api.UploadController.uploadImage2()
+#REPORT PDF
+GET          /report                               @controllers.admin.ReportController.document()
+GET          /report/detail                        @controllers.admin.ReportController.documentDetail()
+# Map static resources from the /public folder to the /assets URL path
+GET           /assets/*file                        @controllers.Assets.at(path="/public", file)

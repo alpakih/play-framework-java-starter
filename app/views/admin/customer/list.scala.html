@@ -1,4 +1,4 @@
-@layout.main("List Product", "List Product", scripts) {
+@layout.main("List Customer", "List Customer", scripts) {
     <div id="messages-div">
         @if(flash.containsKey("success")) {
             <div class="alert alert-success">
@@ -15,24 +15,24 @@
     </div>
     <div class="row">
         <div class="col-md-12" style=" margin-bottom: 30px;">
-            <a class="btn btn-info btn-sm pull-right" href="@controllers.admin.routes.ProductController.add()">
-                <i class="fa fa-plus"></i> Tambah
+            <a class="btn btn-info btn-sm pull-right" href="@controllers.admin.routes.CustomerController.add()">
+                <i class="fa fa-plus"></i> New Customer
             </a>
         </div>
     </div>
     <div class="box-body data-tables table-responsive table-invest">
-        <table id="product" class="table table-hover">
+        <table id="customer" class="table table-hover">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Photo</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Description</th>
-                    <th>Category</th>
-                    <th>Actions</th>
+                    <th>Nama Customer</th>
+                    <th>Alamat</th>
+                    <th>Action</th>
                 </tr>
             </thead>
+            <tbody>
+
+            </tbody>
         </table>
     </div>
     @views.html.helper.modal_delete()
@@ -40,22 +40,22 @@
 @scripts = {
     <script type="text/javascript">
             $(document).ready(function () {
-                var tableProduct = $('#product').DataTable({
+                var tableCustomer = $('#customer').DataTable({
                     "processing": true,
                     "serverSide": true,
-                    "ajax": "@controllers.admin.routes.ProductController.listProduct()"
+                    "ajax": "@controllers.admin.routes.CustomerController.listCustomer()"
                 });
                 $('#submit-delete').on('click', function () {
                     var id = $("#id").val();
                     $.ajax({
-                        url: "/admin/product/" + id + "/delete",
+                        url: "/admin/customer/" + id + "/delete",
                         type: 'DELETE',
                         beforeSend: function () {
                             $('#modal-delete').modal('hide');
                         },
                         success: function (resp) {
                             alert(resp);
-                            tableProduct.ajax.reload();
+                            tableCustomer.ajax.reload();
                         },
                         complete: function (xhr) {
                         }
@@ -63,10 +63,11 @@
                 });
             });
 
-            function deleteDataProduct(id) {
+            function deleteDataCustomer(id) {
                 $('#modal-delete').modal('show');
                 $("#id").val(id);
             }
 
     </script>
-};
+
+}

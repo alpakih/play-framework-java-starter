@@ -6,16 +6,18 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import constan.DatatablesConstant;
 import models.Category;
-import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import java.util.List;
 import java.util.Map;
 
 public class CategoryController extends Controller {
     public Result index() {
+//        List<Category> category = Category.find.all();
         return ok(views.html.admin.category.list.render());
     }
 
@@ -24,27 +26,22 @@ public class CategoryController extends Controller {
         return ok(views.html.admin.category.form.render("Catagory", "Add", routes.CategoryController.store(), data));
     }
 
-    public Result listCategoryProduct() {
 
+
+    public Result listCategoryProduct() {
         try {
             Map<String, String[]> parameters = request().queryString();
 
-            int totalNumberOfCatagory = Category.find.findRowCount();
+            int totalNumberOfCategory = Category.find.findRowCount();
             String searchParam = parameters.get(DatatablesConstant.DATATABLE_PARAM_SEARCH)[0];
             int pageSize = Integer.parseInt(parameters.get(DatatablesConstant.DATATABLE_PARAM_DISPLAY_LENGTH)[0]);
-
             int page = Integer.valueOf(parameters.get(DatatablesConstant.DATATABLE_PARAM_DISPLAY_START)[0]) / pageSize;
-
             String sortBy = "id";
             String order = parameters.get(DatatablesConstant.DATATABLE_PARAM_SORTING_ORDER)[0];
-
             Integer sortingColumnId = Integer.valueOf(parameters.get(DatatablesConstant.DATATABLE_PARAM_SORTING_COLUMN)[0]);
 
-            switch (sortingColumnId) {
-
-                case 2:
-                    sortBy = "name";
-                    break;
+            if (sortingColumnId == 2) {
+                sortBy = "name";
             }
 
             PagedList<Category> categoryPage = Category.page(page, pageSize, sortBy, order, searchParam);
@@ -52,7 +49,7 @@ public class CategoryController extends Controller {
             ObjectNode result = Json.newObject();
 
             result.put("draw", parameters.get(DatatablesConstant.DATATABLE_PARAM_DRAW)[0]);
-            result.put("recordsTotal", totalNumberOfCatagory);
+            result.put("recordsTotal", totalNumberOfCategory);
             result.put("recordsFiltered", categoryPage.getTotalRowCount());
 
             ArrayNode an = result.putArray("data");
@@ -69,11 +66,8 @@ public class CategoryController extends Controller {
                 an.add(row);
                 num++;
             }
-
             return ok(Json.toJson(result));
-
         } catch (NumberFormatException e) {
-            Logger.debug("" + e.getMessage());
             return badRequest();
         }
     }
@@ -82,17 +76,14 @@ public class CategoryController extends Controller {
         try {
             Ebean.beginTransaction();
             //Binding data from form / view
-            Form<Category> categoryForm = Form.form(Category.class).bindFromRequest();
+            DynamicForm categoryForm = Form.form().bindFromRequest();
+            Category category = new Category();
+            category.name = categoryForm.data().get("name");
 
-            //Validation
-            if (categoryForm.hasErrors()) {
-                flash("error", "Category " + categoryForm.get().name + " failed created");
-            }
             //Save to table
-            Category category = categoryForm.get();
             category.save();
             Ebean.commitTransaction();
-            flash("success", "Category " + categoryForm.get().name + " has been created");
+            flash("success", "Category " + categoryForm.data().get("name") + " has been created");
         } catch (Exception e) {
             Ebean.rollbackTransaction();
             flash("error", e.getMessage());
@@ -122,31 +113,25 @@ public class CategoryController extends Controller {
         } else {
             flash("error", "failed to edit data");
             return redirect(routes.CategoryController.index());
-
         }
         return ok(views.html.admin.category.form.render("Category", "Edit", routes.CategoryController.update(), categoryForm));
     }
 
     public Result update() {
-
         try {
             Ebean.beginTransaction();
             //Binding data from form / view
-            Form<Category> form = Form.form(Category.class).bindFromRequest();
-            //Binding data as multipartFormData to get file
+            Form<Category> data = Form.form(Category.class).bindFromRequest();
 
             //Validation
-            if (form.hasErrors()) {
-                flash("error", "Product " + form.get().name + " failed update");
+            if (data.hasErrors()) {
+                flash("error", "Category " + data.get().name + " failed update");
             }
 
-            Category formData = form.get();
-            formData.update();
+            Category category = data.get();
+            category.update();
             Ebean.commitTransaction();
-
-            flash("success", "Category "
-                    + form.get().name + " success updated");
-
+            flash("success", "Category " + data.get().name + " success updated");
         } catch (Exception e) {
             flash("error", e.getMessage());
             Ebean.rollbackTransaction();

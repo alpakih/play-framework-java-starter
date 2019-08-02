@@ -1,0 +1,74 @@
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Login</title>
+
+            <!-- Bootstrap core CSS -->
+        <link href="@routes.Assets.at("stylesheets/bootstrap.min.css")" rel="stylesheet">
+
+            <!-- Custom styles for this template -->
+        <link href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet">
+        <link href="@routes.Assets.at("stylesheets/datatables.min.css")" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+
+    <body>
+        <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Play Framework</a>
+        </nav><br><br><br><br>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+
+                </div>
+                <div class="col-sm-4">
+                    <div id="messages-div">
+                        @if(flash.containsKey("success")) {
+                            <div class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                @flash.get("success")
+                            </div>
+                        }
+                        @if(flash.containsKey("error")) {
+                            <div class="alert alert-danger">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                @flash.get("error")
+                            </div>
+                        }
+                    </div>
+                    <h2 class="page-header">Login Admin</h2>
+                    <form role="form" action="@controllers.routes.LoginController.submit()" method="POST" class="form-horizontal" id="loginForm" enctype="multipart/form-data">
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password"  name="password"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary" >Submit</button>
+                    </form>
+                </div>
+                <div class="col-sm-4">
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="@routes.Assets.at(" javascripts/jquery-3.4.1.min.js")" ></script>
+        <script src="@routes.Assets.at(" javascripts/bootstrap.min.js")"></script>
+        <script src="@routes.Assets.at(" javascripts/popper.min.js")"></script>
+        <script src="@routes.Assets.at(" javascripts/datatables.min.js")"></script>
+    </body>
+</html>

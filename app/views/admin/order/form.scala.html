@@ -1,0 +1,205 @@
+@(title: String, action: String, url: play.api.mvc.Call, form: Form[Order], customers: List[Customer], products: List[Product])
+    @layout.main(action + " Order", action + " Order", scripts) {
+        <div class="panel-body">
+            <form action="#" method="post" class="form-horizontal" id="form-order" enctype="multipart/form-data">
+                <h4>Customer</h4>
+                <div class="row">
+                    <div>
+                        <input type="hidden" name="@form("id").name()" id="id" value="@form("id").value()">
+                    </div>
+                    <div class="col">
+                        <label class="control-label" for="name">No Transaksi</label>
+                        <div >
+                            <input type="text" class="form-control" name="no_transaksi" id="no_transaksi" value="@form("no_transaksi").value()">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label class="control-label" for="name">Nama Customer</label>
+                        <div>
+                            <select class="form-control" name="customerID" id="customerID" >
+                                <option disabled selected value=""> Pilih Customer </option>
+                                @for(data <- customers) {
+                                    <option value="@data.id">@data.name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label class="control-label" for="name">Tanggal</label>
+                        <div>
+                            <input type="date" class="form-control" name="date" id="date" value="@form("date").value()">
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <h4>Order Item</h4>
+                <div class="row">
+                    <div class="col">
+                        <label class="control-label" for="name">Nama Produk</label>
+                        <div>
+                            <select class="form-control" name="productID" id="productID">
+                                <option disabled selected value=""> Pilih Produk </option>
+                                @for(data <- products) {
+                                    <option value="@data.id">@data.name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label class="control-label" for="name">Price</label>
+                        <div>
+                            <input type="number" class="form-control" name="price" id="price" value="@form("price").value()">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <label class="control-label" for="name">Quantity</label>
+                        <div>
+                            <input type="number" class="form-control" name="quantity" id="quantity" value="@form("quantity").value()">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <div>
+                            <button type="submit" class="btn btn-danger" id="addToList">Add To Chart</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="box-body data-tables table-responsive table-invest">
+                    <table id="detailsTable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Produk</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Sub Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr/>
+                <div class="form-group">
+                    <div class="col-lg-4">
+                        <a href="@controllers.admin.routes.OrderController.index()" class="btn btn-warning" id="btn-back">
+                            Kembali
+                        </a>
+                        <button type="submit" id="saveOrder" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    }
+
+    @scripts = {
+        <script type="text/javascript">
+                //ajax price
+                $('#productID').on("change", function () {
+                    var id = $('#productID').val();
+                    $.ajax({
+                        url: "/api/product/get-product/" + id,
+                        type: "POST",
+                        success: function (resp) {
+                            // console.log(resp);
+                            $('#price').val(resp.price);
+                        }
+                    });
+                });
+
+                //Add Multiple Order
+                $("#addToList").on('click', function (e) {
+
+                    e.preventDefault();
+
+                    var productName = $("#productID").val(),
+                            price = $("#price").val(),
+                            quantity = $("#quantity").val(),
+                            detailsTableBody = $("#detailsTable tbody");
+
+                    var productItem =
+                            '<tr><td>' + productName +
+                            '</td><td>' + price +
+                            '</td><td>' + quantity +
+                            '</td><td>' + (parseFloat(price) * parseInt(quantity)) +
+                            '</td><td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td></tr>';
+                    detailsTableBody.append(productItem);
+                    // $("#form-order").trigger('reset');
+                    // $('#form-order')[0].reset();
+                    clearItem();
+
+                });
+
+                //After Add A New Order In The List, Clear Clean The Form For Add More Order.
+                function clearItem() {
+                    $("#productID'").val('');
+                    $("#price")[0].val('');
+                    $("#quantity")[0].val('');
+                }
+
+                // After Add A New Order In The List, If You Want, You Can Remove It.
+                $(document).on('click', 'a.deleteItem', function (e) {
+                    e.preventDefault();
+                    var $self = $(this);
+                    if ($(this).attr('data-itemId') == "0") {
+                        $(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function () {
+                            $(this).remove();
+                        });
+                    }
+                });
+
+                //After Click Save Button Pass All Data View To Controller For Save Database
+                function saveOrder(data) {
+                    return $.ajax({
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        type: 'POST',
+                        url: "/admin/order/store",
+                        data: data,
+                        success: function (result) {
+                            alert(result);
+                            window.location.replace("/admin/order");
+                        },
+                        error: function () {
+                            alert("Error!")
+                        }
+                    });
+                }
+
+                //Collect Multiple Order List For Pass To Controller
+                $("#saveOrder").click(function (e) {
+                    e.preventDefault();
+
+                    var orderArr = [];
+                    orderArr.length = 0;
+
+                    $.each($("#detailsTable tbody tr"), function () {
+                        orderArr.push({
+                            productID: $(this).find('td:eq(0)').html(),
+                            price: $(this).find('td:eq(1)').html(),
+                            quantity: $(this).find('td:eq(2)').html()
+                        });
+                    });
+
+                    var data = JSON.stringify({
+                        no_transaksi: $("#no_transaksi").val(),
+                        customerID: $("#customerID").val(),
+                        tanggal: $("#date").val(),
+                        detail: orderArr
+                    });
+                    console.log(data);
+                    $.when(saveOrder(data)).then(function (response) {
+                        console.log(response);
+                    }).fail(function (err) {
+                        console.log(err);
+                    });
+                });
+
+        </script>
+    }

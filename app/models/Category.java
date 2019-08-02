@@ -14,11 +14,10 @@ public class Category extends Model {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "name_category_seq")
     public Long id;
 
+    @Column (name = "name")
     public String name;
 
-
     public static Finder<Long, Category> find = new Finder<>(Long.class, Category.class);
-
 
     public static PagedList<Category> page(int page, int pageSize, String sortBy, String order, String filter) {
         return

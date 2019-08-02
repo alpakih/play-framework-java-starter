@@ -6,6 +6,7 @@ import com.avaje.ebean.PagedList;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 import java.util.Date;
 
 @Entity
@@ -17,9 +18,9 @@ public class User extends Model {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "name_user_seq")
     public Long id;
 
-//    @Constraints.Pattern(value = "^[a-zA-Z \\\\._\\\\-]+$", message = "name hanya diperbolehkan abjad")
-//    @Constraints.MinLength(value = 2, message = "Minimum value 2")
-//    @Constraints.MaxLength(value = 45, message = "Maximum value 50")
+    @Constraints.Pattern(value = "^[a-zA-Z \\\\._\\\\-]+$", message = "name hanya diperbolehkan abjad")
+    @Constraints.MinLength(value = 2, message = "Minimum value 2")
+    @Constraints.MaxLength(value = 45, message = "Maximum value 50")
     @Column(name = "name")
     public String name;
 
@@ -50,7 +51,6 @@ public class User extends Model {
 
     public static Finder<Long, User> find = new Finder<>(Long.class, User.class);
 
-
     /**
      * Return a page of computer
      *
@@ -73,4 +73,5 @@ public class User extends Model {
                         .orderBy(sortBy + " " + order)
                         .findPagedList(page, pageSize);
     }
+
 }

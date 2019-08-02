@@ -1,6 +1,22 @@
 @(title: String, action: String, url: play.api.mvc.Call, form: Form[User])
     @layout.main(action + " User", action + " User", scripts) {
         <div class="panel-body">
+
+            <div id="messages-div">
+                @if(flash.containsKey("success")) {
+                    <div class="alert alert-success">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        @flash.get("success")
+                    </div>
+                }
+                @if(flash.containsKey("error")) {
+                    <div class="alert alert-danger">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        @flash.get("error")
+                    </div>
+                }
+            </div>
+
             <form action="@url" method="POST" class="form-horizontal" id="form-user" enctype="multipart/form-data">
 
                 <div class="form-group">
@@ -87,6 +103,7 @@
                     $("#preview").css('display', 'block');
                     readURL(this);
                 });
+
         </script>
 
     }

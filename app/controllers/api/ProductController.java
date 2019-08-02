@@ -2,6 +2,7 @@ package controllers.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import models.Category;
 import models.Product;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -17,15 +18,25 @@ public class ProductController extends Controller {
         return ok(Json.toJson(product));
     }
 
-    public Result deleteProduct(Long id){
-        Product product = Product.find.byId(id);
-        if(product !=null){
-            product.delete();
-        }else{
-            return ok("data tidak ditemukan");
-        }
+    public Result createProduct(){
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+            JsonNode json = request().body().asJson();
+            JsonNode node = mapper.readValue(json.toString(), JsonNode.class);
+            Product product = new Product();
 
-        return ok(Json.toJson(product));
+            product.photo=node.get("photo").asText();
+            product.name=node.get("name").asText();
+            product.price=node.get("price").asDouble();
+            product.description=node.get("description").asText();
+            product.category = Category.find.byId(Long.parseLong(node.get("categoryID").asText()));
+
+            product.save();
+
+            return ok(Json.toJson(product));
+        }catch (Exception e){
+            return badRequest("create failed");
+        }
     }
 
     public Result updateProduct(Long id){
@@ -36,35 +47,41 @@ public class ProductController extends Controller {
             Product product = Product.find.byId(id);
 
             if (product == null){
-                return notFound("Product tidak ditemukan");
+                return notFound("data not found");
             }else{
-                product.name=node.get("name").asText();
-                product.price=node.get("price").asDouble();
-                product.update();
+                product.photo = node.get("photo").asText();
+                product.name = node.get("name").asText();
+                product.price = node.get("price").asDouble();
+                product.description = node.get("description").asText();
+                product.category = Category.find.byId(Long.parseLong(node.get("categoryID").asText()));
 
+                product.update();
 
                 return ok(Json.toJson(product));
             }
         }catch (Exception e){
-            return badRequest();
+            return badRequest("update failed");
         }
     }
 
-    public Result createProduct(){
-        ObjectMapper mapper = new ObjectMapper();
-        try{
-            JsonNode json = request().body().asJson();
-            JsonNode node = mapper.readValue(json.toString(), JsonNode.class);
-            Product product = new Product();
-
-            product.name=node.get("name").asText();
-            product.price=node.get("price").asDouble();
-            product.description=node.get("description").asText();
-            product.save();
-
+    public Result deleteProduct(Long id){
+        Product product = Product.find.byId(id);
+        try {
+            if(product !=null){
+                product.delete();
+            }else{
+                return ok("data not found");
+            }
             return ok(Json.toJson(product));
         }catch (Exception e){
-            return badRequest();
+            return badRequest("delete failed");
         }
     }
+
+    public Result getProductById(Long id) {
+        Product product = Product.find.byId(id);
+
+        return ok(Json.toJson(product));
+    }
+
 }

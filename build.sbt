@@ -11,8 +11,10 @@ libraryDependencies ++= Seq(
   evolutions,
   "org.postgresql" % "postgresql" % "42.2.5",
   "org.mindrot" % "jbcrypt" % "0.3m",
-  "commons-io" % "commons-io" % "2.6"
-
+  "commons-io" % "commons-io" % "2.6",
+  "org.xhtmlrenderer" % "flying-saucer-pdf" % "9.1.1",
+  "nu.validator.htmlparser" % "htmlparser" % "1.4"
+  
 )
 resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
@@ -22,3 +24,5 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("releases"),
   Resolver.typesafeRepo("releases")
 )
+
+

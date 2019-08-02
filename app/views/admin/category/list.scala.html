@@ -1,4 +1,4 @@
-@layout.main("List Catagory", "List Catagory", scripts) {
+@layout.main("List Category", "List Category", scripts) {
     <div id="messages-div">
         @if(flash.containsKey("success")) {
             <div class="alert alert-success">
@@ -24,11 +24,21 @@
         <table id="category" class="table table-hover">
             <thead>
                 <tr>
-                    <th>No</th>
+                    <th>Id</th>
                     <th>Nama Category</th>
                     <th>Action</th>
                 </tr>
             </thead>
+@*            <tbody>*@
+@*                @for(dt <- data){*@
+@*                    <tr>*@
+@*                        <td>@dt.id</td>*@
+@*                        <td>@dt.name</td>*@
+@*                        <td>Test</td>*@
+@*                    </tr>*@
+@*                }*@
+
+@*            </tbody>*@
         </table>
     </div>
     @views.html.helper.modal_delete()

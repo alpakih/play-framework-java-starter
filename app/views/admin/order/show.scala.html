@@ -1,0 +1,32 @@
+@(detail : List[DetailsOrder])
+
+@layout.main("Detail Order", "Detail Order"){
+
+    <div class="box-body data-tables table-responsive table-invest">
+        <table id="" class="table table-hover">
+            <tr>
+                <td>Order Id</td>
+                <td>Nama Produk</td>
+                <td>Price</td>
+                <td>Qty</td>
+                <td>Sub Total</td>
+            </tr>
+            @for(x <- detail) {
+                <tr>
+                    <td>@x.order.id</td>
+                    <td>@x.product.name</td>
+                    <td>@x.product.price</td>
+                    <td>@x.quantity</td>
+                    <td>@x.sub_total</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="col-md-12" style=" margin-bottom: 30px;">
+        <a class="btn btn-danger btn-sm pull-right mr-3" href="@controllers.admin.routes.ReportController.documentDetail()">
+            <i class="fa fa-plus"></i> Print PDF
+        </a>
+    </div>
+
+}

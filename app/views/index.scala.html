@@ -1,3 +1,10 @@
 @layout.main("Index","Welcome"){
+    @if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            @flash.get("success")
+        </div>
+    }
 <h1>Page Index Admin</h1>
 }
+

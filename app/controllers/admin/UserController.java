@@ -2,13 +2,13 @@ package controllers.admin;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.PagedList;
+import com.avaje.ebean.Transaction;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import constan.DatatablesConstant;
 import helper.Util;
 import models.User;
 import org.mindrot.jbcrypt.BCrypt;
-import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -39,8 +39,8 @@ public class UserController extends Controller {
      * @return view form
      */
     public Result add() {
-        Form<User> data = Form.form(User.class);
-        return ok(views.html.admin.users.form.render("User", "Add", routes.UserController.store(), data));
+       Form<User> data = Form.form(User.class);
+       return ok(views.html.admin.users.form.render("User", "Add", routes.UserController.store(), data));
     }
 
     /**
@@ -53,12 +53,12 @@ public class UserController extends Controller {
     public Result edit(Long id) {
         User user = User.find.byId(id);
         Form<User> userForm;
-        if (user != null) {
+
+        if (user!=null){
             userForm = Form.form(User.class).fill(user);
-        } else {
+        }else {
             flash("error", "failed to edit data");
             return redirect(routes.UserController.index());
-
         }
         return ok(views.html.admin.users.form.render("User", "Edit", routes.UserController.update(), userForm));
     }
@@ -69,7 +69,6 @@ public class UserController extends Controller {
      * @return result
      */
     public Result update() {
-
         try {
             Ebean.beginTransaction();
             //Binding data from form / view
@@ -94,8 +93,7 @@ public class UserController extends Controller {
                     formData.update();
                     Ebean.commitTransaction();
 
-                    flash("success", "User "
-                            + form.get().name + " success updated");
+                    flash("success", "User " + form.get().name + " success updated");
                 } else {
                     flash("error", "Error!");
                 }
@@ -115,40 +113,43 @@ public class UserController extends Controller {
      * @return result
      */
     public Result store() {
+        Transaction tx = Ebean.beginTransaction();
+
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Map<String, String[]> map = body.asFormUrlEncoded();
+
+        Http.MultipartFormData.FilePart userImage = null;
+
+        User user = new User();
         try {
-            Ebean.beginTransaction();
-            //Binding data from form / view
-            Form<User> userForm = Form.form(User.class).bindFromRequest();
-            //Binding data as multipartFormData to get file
-            Http.MultipartFormData multipartFormData = request().body().asMultipartFormData();
-            Http.MultipartFormData.FilePart userImage = multipartFormData.getFile("image");
-            //Validation
-            if (userForm.hasErrors()) {
-                flash("error", "User " + userForm.get().name + " failed created");
-            } else if (!userForm.get().password.equals(userForm.get().confirmPassword)) {
+            user.name = map.get("name")[0];
+            user.email = map.get("email")[0];
+            user.password = BCrypt.hashpw(map.get("password")[0],BCrypt.gensalt(10));
+            user.phoneNumber = map.get("phoneNumber")[0];
+
+            if (!map.get("password")[0].equals(map.get("confirmPassword")[0])){
                 flash("error", "Wrong confirm password");
-                return redirect(routes.UserController.index());
+                return redirect(routes.UserController.add());
             }
-            //Save to table
-            User user = userForm.get();
-            user.password = BCrypt.hashpw(userForm.get().password,BCrypt.gensalt());
-            if (userImage!=null){
-                user.image=Util.saveImage(userImage,"avatars");
+
+            userImage = body.getFile("image");
+            if(userImage!=null){
+                user.image = Util.saveImage(userImage,"avatars" );
             }
+
             user.save();
-            Ebean.commitTransaction();
-            flash("success", "User " + userForm.get().name + " has been created");
+            tx.commit();
+            flash("success", "User " + map.get("name")[0] + " has been created");
         } catch (Exception e) {
-            Ebean.rollbackTransaction();
-            flash("error", e.getMessage());
-        } finally {
-            Ebean.endTransaction();
+            tx.rollback();
+        }finally {
+            tx.end();
         }
         return redirect(routes.UserController.index());
     }
 
     /**
-     * Mehode listUser for list datatables
+     * Method listUser for list datatables
      *
      * @return json
      */
@@ -206,11 +207,8 @@ public class UserController extends Controller {
                 an.add(row);
                 num++;
             }
-
             return ok(Json.toJson(result));
-
         } catch (NumberFormatException e) {
-            Logger.debug("" + e.getMessage());
             return badRequest();
         }
     }
@@ -224,7 +222,7 @@ public class UserController extends Controller {
     public Result delete(Long id) {
         User user = User.find.byId(id);
         int status = 0;
-        if (user != null) {
+        if (user!=null){
             user.delete();
             status = 1;
         }

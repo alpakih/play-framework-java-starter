@@ -1,0 +1,53 @@
+@(form : List[DetailsOrder])
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>PDF Sample</title>
+        <link rel="stylesheet" href="/public/stylesheets/pdf.css"/>
+        <style>
+                h1{
+                    text-align: center;
+                }
+                table, th, td{
+                    border: 1px, solid, black;
+                    border-collapse: collapse;
+                    text-align: center;
+                }
+                .arial{
+                    text-align: right;
+                }
+        </style>
+    </head>
+    <body>
+
+        <div class="blue" >
+            <h1>Detail Order</h1>
+        </div>
+        <br>
+        <table style="width: 100%">
+            <tr>
+                <td>Order Id</td>
+                <td>Nama Produk</td>
+                <td>Price</td>
+                <td>Qty</td>
+                <td>Sub Total</td>
+            </tr>
+            @for(x <- form) {
+                <tr>
+                    <td>@x.order.id</td>
+                    <td>@x.product.name</td>
+                    <td>@x.product.price</td>
+                    <td>@x.quantity</td>
+                    <td>@x.sub_total</td>
+                </tr>
+            }
+
+        </table>
+        <br>
+        <div class="arial">
+            <p>Bandung, Agustus 2019</p>
+        </div>
+    </body>
+</html>
