@@ -84,6 +84,6 @@ POST         /api/upload                           @controllers.api.UploadContro
 POST         /api/upload2                          @controllers.api.UploadController.uploadImage2()
 #REPORT PDF
 GET          /report                               @controllers.admin.ReportController.document()
-GET          /report/detail                        @controllers.admin.ReportController.documentDetail()
+GET          /report/detail/:id                        @controllers.admin.ReportController.documentDetail(id:Long)
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                        @controllers.Assets.at(path="/public", file)

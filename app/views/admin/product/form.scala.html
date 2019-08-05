@@ -19,7 +19,7 @@
                     <div class="col-lg-4">
                         <select class="form-control" name="categoryID" id="categoryID">
                         @for(data <- categories) {
-                            <option value="@data.id">@data.name</option>
+                            <option value="@data.id" @if(Long.parseLong(form("category.id").value()) == data.id){selected="selected"}>@data.name</option>
                         }
                         </select>
 

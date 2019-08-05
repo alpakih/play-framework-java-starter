@@ -1,4 +1,4 @@
-@(detail : List[DetailsOrder])
+@(detail : List[DetailsOrder],id:Long)
 
 @layout.main("Detail Order", "Detail Order"){
 
@@ -24,7 +24,7 @@
     </div>
 
     <div class="col-md-12" style=" margin-bottom: 30px;">
-        <a class="btn btn-danger btn-sm pull-right mr-3" href="@controllers.admin.routes.ReportController.documentDetail()">
+        <a class="btn btn-danger btn-sm pull-right mr-3" href="@controllers.admin.routes.ReportController.documentDetail(id)">
             <i class="fa fa-plus"></i> Print PDF
         </a>
     </div>

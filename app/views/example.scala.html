@@ -1,4 +1,5 @@
-@(form : List[Order])
+@import constan.DateHelper
+@(form : List[Order], util: DateHelper)
 
 <!DOCTYPE html>
 
@@ -37,7 +38,7 @@
             @for(x <- form) {
                 <tr>
                     <td>@x.id</td>
-                    <td>@x.createdAt</td>
+                    <td>@util.convertDate(x.createdAt)</td>
                     <td>@x.no_transaksi</td>
                     <td>@x.customer.name</td>
                     <td>@x.total</td>

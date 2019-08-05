@@ -108,8 +108,8 @@ public class OrderController extends Controller {
             for (Order c : orderPage.getList()) {
                 ObjectNode row = Json.newObject();
                 String action = "";
-//                action += "&nbsp;<a href=\"order/" + c.id + "/edit" + "\"><i class =\"fa fa-edit\"></i>Edit</a>";
-                action += "&nbsp;<a href=\"order/" + c.id + "/show" + "\"><i class =\"fa fa-edit\"></i>Show</a>";
+                action += "&nbsp;<a href=\"order/" + c.id + "/show" + "\"><i class=\"fa fa-check\"></i>Show</a>";
+                action += "&nbsp;<a href=\"order/" + c.id + "/edit" + "\"><i class =\"fa fa-edit\"></i>Edit</a>";
                 action += "&nbsp;<a href=\"javascript:deleteDataOrder(" + c.id + ");\"><i class=\"fa fa-remove\"></i>Delete</a>&nbsp;";
 
                 row.put("0", num);
@@ -133,6 +133,7 @@ public class OrderController extends Controller {
         Order order = Order.find.byId(id);
         List<Customer> customers = Customer.find.all();
         List<Product> products = Product.find.all();
+        List<DetailsOrder> detailsOrders = DetailsOrder.find.where().eq("order_id", order.id).findList();
 
         Form<Order> orderForm;
         if (order != null) {
@@ -141,8 +142,8 @@ public class OrderController extends Controller {
             flash("error", "failed to edit data");
             return redirect(routes.OrderController.index());
         }
-        return ok(views.html.admin.order.form.render("Order", "Edit", routes.OrderController.update(),
-                orderForm, customers, products));
+        return ok(views.html.admin.order.editForm.render("Order", "Edit", routes.OrderController.update(),
+                orderForm, customers, products, detailsOrders));
     }
 
     public Result update() {
@@ -196,7 +197,7 @@ public class OrderController extends Controller {
     public Result showDetail(Long id){
         List<DetailsOrder> detail = DetailsOrder.find.where().eq("order_id", id).findList();
 
-        return ok(views.html.admin.order.show.render(detail));
+        return ok(views.html.admin.order.show.render(detail,id));
     }
 
 }
